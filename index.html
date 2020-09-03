@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta name="description" content="">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Node.js/Express demo app</title>
+	<style>
+		html, body {
+			height: 100%;
+		}
+
+		section {
+			height: 100%;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+		}
+
+		section div {
+			width: 300px;
+			padding: 0 1em;
+			box-shadow: 0 0  0.3em #333;
+		}
+
+		p {
+			line-height: 2;
+			display: flex;
+			justify-content: space-between;
+		}
+		input[type="number"]{
+			width: 5em;
+		}
+		p#output {
+			justify-content: right;
+		}
+	</style>
+	</head>
+	<body>
+		<section>
+			<h3>A simple adder app</h3>
+			<p>Enter two valid numbers. The results of the addition will be displayed below the form.</p>
+			<div>
+				<p>
+					<label for="numA">Enter first number: </label>
+					<input type="number" id="numA" required>
+				</p>
+				<p>
+					<label for="numB">Enter second number: </label>
+					<input type="number" id="numB" required>
+				</p>
+				<p><button id="submit">Add</button></p>
+				<p id="output"></p>
+			</div>
+		</section>
+
+		<script>
+			let numA, numB, sum;
+			const submitButton = document.getElementById('submit');
+			submitButton.addEventListener('click', () => {
+				numA = document.getElementById('numA').value;
+				numB = document.getElementById('numB').value;
+				const data = {
+					numA: numA,
+					numB: numB
+				}
+
+				fetch('/add',{
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify(data)
+				})
+				.then(res => res.json()
+				)
+				.then(data => {
+						if (data.input) {
+						document.getElementById('output').textContent =
+							`${data.input[0]} + ${data.input[1]} = ${data.sum}`;
+						} else {
+							document.getElementById('output').textContent = 
+											data.error;
+						}
+				});
+
+			});
+		</script>
+	</body>
+</html>
