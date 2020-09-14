@@ -49,35 +49,31 @@
 					<label for="numB">Enter second number: </label>
 					<input type="number" id="numB" required>
 				</p>
-				<p><button id="submit">Add</button></p>
+				<p><button id="submit">Enter</button></p>
 				<p id="output"></p>
 			</div>
 		</section>
 
 		<script>
-			let numA, numB, sum;
+			let numA, numB, result;
 			const submitButton = document.getElementById('submit');
 			submitButton.addEventListener('click', () => {
 				numA = document.getElementById('numA').value;
-				numB = document.getElementById('numB').value;
-				const data = {
-					numA: numA,
-					numB: numB
-				}
+				numB = document.getElementById('numB').value;				
 
-				fetch('/add',{
-					method: 'POST',
+				// fetch(`/result?numA=${numA}&numB=${numB}`,{
+				fetch('/result?' + new URLSearchParams({numA,numB}),{
+					method: 'GET',
 					headers: {
 						'Content-Type': 'application/json'
-					},
-					body: JSON.stringify(data)
+					},					
 				})
 				.then(res => res.json()
 				)
 				.then(data => {
 						if (data.input) {
 						document.getElementById('output').textContent =
-							`${data.input[0]} + ${data.input[1]} = ${data.sum}`;
+							`${data.input[0]} + ${data.input[1]} = ${data.result}`;
 						} else {
 							document.getElementById('output').textContent = 
 											data.error;
